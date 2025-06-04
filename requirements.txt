@@ -1,0 +1,13 @@
+djangorestframework
+django-cors-headers
+django-resized
+django-nested-inline
+django-jazzmin
+
+pillow
+djoser
+pytils
+django-cleanup
+django-ckeditor-5
+django-filter
+yookassa
