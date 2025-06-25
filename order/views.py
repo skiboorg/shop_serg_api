@@ -7,7 +7,8 @@ from rest_framework import generics
 from cart.views import get_cart
 from .serializers import *
 from .models import *
-from yookassa import Configuration, Payment as YooPayment
+
+
 
 import uuid
 class OrderView(APIView):
