@@ -52,6 +52,8 @@ class CartView(APIView):
         style_id = request.data.get('style_id', None)
         if style_id:
             style = Style.objects.get(id=style_id)
+            if style.products.all().count() == 0:
+                result = {'result': False, 'message': 'В стиле нет товаров'}
             for product in style.products.all():
 
                 cart_item,created = CartItem.objects.get_or_create(
@@ -68,6 +70,7 @@ class CartView(APIView):
                     cart_item.amount += 1
                     cart_item.save()
                     result = {'result': True, 'message': 'Количество товара изменено'}
+
         else:
             cart_item, created = CartItem.objects.get_or_create(
                 cart=cart,
