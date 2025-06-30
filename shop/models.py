@@ -3,6 +3,33 @@ from pytils.translit import slugify
 from django_ckeditor_5.fields import CKEditor5Field
 from django_resized import ResizedImageField
 
+class Style(models.Model):
+    order_num = models.IntegerField(default=1, null=True)
+    style = models.CharField(default='col-span-12 md:col-span-4',
+                             help_text='col-span-12 md:col-span-9 md:col-start-4, '
+                                       'col-span-12 md:col-span-4 md:col-start-2, '
+                                       'col-span-12 md:col-span-4 md:col-start-9'
+                                       'col-span-12 md:col-span-6',
+                             blank=False,  max_length=255)
+    image = models.FileField(upload_to='shop/category/images', blank=True, null=True)
+    price = models.DecimalField('Цена', default=0, decimal_places=2, max_digits=10, blank=True)
+    name = models.CharField('Название', max_length=255, blank=True, null=False)
+    slug = models.CharField('ЧПУ', max_length=255,blank=True, null=True)
+    html_content = CKEditor5Field('SEO текст', blank=True, null=False)
+
+
+    def __str__(self):
+        return f'{self.name}'
+
+    def save(self, *args, **kwargs):
+
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    class Meta:
+        ordering = ('order_num',)
+        verbose_name = 'Стиль'
+        verbose_name_plural = 'Стиль'
 
 class Category(models.Model):
     order_num = models.IntegerField(default=1, null=True)
@@ -13,6 +40,7 @@ class Category(models.Model):
     short_description = models.TextField('Короткое описание', blank=True, null=False)
     html_content = CKEditor5Field('SEO текст', blank=True, null=False)
     display_amount = models.IntegerField(default=0, blank=True, null=True)
+    styles = models.ManyToManyField(Style, blank=True)
 
 
     def __str__(self):
@@ -81,33 +109,7 @@ class ProductImage(models.Model):
         verbose_name = 'Доп. изображение товара'
         verbose_name_plural = 'Доп. изображения товара'
 
-class Style(models.Model):
-    order_num = models.IntegerField(default=1, null=True)
-    style = models.CharField(default='col-span-12 md:col-span-4',
-                             help_text='col-span-12 md:col-span-9 md:col-start-4, '
-                                       'col-span-12 md:col-span-4 md:col-start-2, '
-                                       'col-span-12 md:col-span-4 md:col-start-9'
-                                       'col-span-12 md:col-span-6',
-                             blank=False,  max_length=255)
-    image = models.FileField(upload_to='shop/category/images', blank=True, null=True)
-    price = models.DecimalField('Цена', default=0, decimal_places=2, max_digits=10, blank=True)
-    name = models.CharField('Название', max_length=255, blank=True, null=False)
-    slug = models.CharField('ЧПУ', max_length=255,blank=True, null=True)
-    html_content = CKEditor5Field('SEO текст', blank=True, null=False)
 
-
-    def __str__(self):
-        return f'{self.name}'
-
-    def save(self, *args, **kwargs):
-
-        self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
-
-    class Meta:
-        ordering = ('order_num',)
-        verbose_name = 'Стиль'
-        verbose_name_plural = 'Стиль'
 
 class StyleProduct(models.Model):
     order_num = models.IntegerField(default=1, null=True)

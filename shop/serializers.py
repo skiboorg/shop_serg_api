@@ -91,6 +91,8 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class CategoryShortSerializer(serializers.ModelSerializer):
+    styles = StyleShortSerializer(many=True,required=False,read_only=True)
+
     class Meta:
         model = Category
-        fields = ['image','name','slug','short_description','display_amount']
+        fields = ['image','name','slug','short_description','display_amount','styles']
