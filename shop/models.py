@@ -97,7 +97,7 @@ class Product(models.Model):
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=False,
                                 related_name='images')
-    image = ResizedImageField(size=[650, 570], quality=95, force_format='WEBP', upload_to='shop/product/images',
+    image = ResizedImageField(size=[1500, 1500], quality=95, force_format='WEBP', upload_to='shop/product/images',
                               blank=False, null=True)
     is_main = models.BooleanField('Основное', default=False, null=False)
 
