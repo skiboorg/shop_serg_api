@@ -7,10 +7,10 @@ class OrderItemInline(NestedStackedInline):
     extra = 0
 
 class OrderAdmin(NestedModelAdmin):
-    list_display = ('id','phone','is_paid','is_done','is_deliveried','total_price','created_at',)
+    list_display = ('order_id','phone','is_done','is_deliveried','total_price','created_at',)
     model = Order
     inlines = [OrderItemInline]
-    list_filter = ('is_paid','is_done','is_deliveried',)
+    list_filter = ('is_done','is_deliveried',)
     readonly_fields = ['total_price']
 
     def total_price(self, obj):
@@ -19,6 +19,6 @@ class OrderAdmin(NestedModelAdmin):
     total_price.short_description = 'Сумма заказа'
 
 admin.site.register(Order,OrderAdmin)
-admin.site.register(Delivery)
-admin.site.register(Payment)
+# admin.site.register(Delivery)
+# admin.site.register(Payment)
 
