@@ -60,6 +60,7 @@ class Category(models.Model):
 
 class Product(models.Model):
     order_num = models.IntegerField(default=1, null=True)
+    inner_id = models.CharField(default=1, max_length=50, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True, related_name='products')
     article = models.CharField('Артикул', max_length=20,blank=True, null=True)
 
