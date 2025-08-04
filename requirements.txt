@@ -11,3 +11,6 @@ django-cleanup
 django-ckeditor-5
 django-filter
 yookassa
+
+dadata
+python-dotenv
