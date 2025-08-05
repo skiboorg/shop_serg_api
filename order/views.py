@@ -37,28 +37,37 @@ class OrderView(APIView):
     def post(self, request):
         data = request.data
         print(data)
+        selected_address = data['selected_address']
+        selected_delivery = data['selected_delivery']
         cart = get_cart(request)
-        # payment_type_id = data.get('payment',None)
-        # delivery_type_id = data.get('delivery',None)
-        # payment_type = Payment.objects.get(id=payment_type_id)
-        # if not payment_type_id:
-        #     payment_type = Payment.objects.first()
-        #     delivery_type_id = Delivery.objects.first().id
+        api_key = os.getenv("ZAO_SDT_API_KEY")
+
+        items = []
+
+        for item in cart.items.all():
+            items.append({
+                    "name":item.product.name,
+                    "item_id":item.product.inner_id,
+                    "quantity":item.amount,
+                    "price":float(item.total_price)
+                })
 
         order_data = {
             "order":
                 {
-                    "id":"9f436c59c9b8201db22e67477497e6c0",
-                    "delivery_sum":368,
+                    "id":data['order_id'],
+                    "delivery_sum":float(selected_delivery['cost']),
                     "payment_type":2,
-                    "send_date":"05.06.2025",
-                    "comment":"",
+                    "send_date":selected_delivery['delivery_date'],
+                    "comment":data.get('comment'),
                     "weight":100,
-                    "city_id":"79b806cd-e36c-48fc-b82c-8cbb5cfd9450",
-                    "place_id":291329,
-                    "index":None,
-                    "street":"ул Алексеевский Пост",
-                    "building_1":"5",
+                    "city_id":selected_address['fias_id'],
+                    "place_id":selected_delivery['place_id'],
+                    "index":selected_address['postal_code'],
+                    "street":data['street'],
+                    "building_1":data['building_1'],
+                    "building_2":data['building_2'],
+                    "room":data['room'],
                     "options":
                         {"partial_return":0,
                          "manual_confirm":False,
@@ -67,26 +76,31 @@ class OrderView(APIView):
                 },
             "customer":
                 {
-                    "firstname":"Марина",
-                    "middlename":"Александровна",
-                    "lastname":"Карельская",
-                    "phone":"+79213056193",
-                    "email":"nekonaeko@mail.ru",
-                    "address":"г Москва, ул Алексеевский Пост, д 5"
+                    "firstname":data['firstname'],
+                    "middlename":data.get('middlename'),
+                    "lastname":data['lastname'],
+                    "phone":f"+7{data['phone']}",
+                    "email":data['email'],
+                    "address":f"{selected_address['value']} {data['street']} {data['building_1']} {data['building_2']}"
                 },
-            "items":[
-                {
-                    "name":"Rich B*tch",
-                    "item_id":"notcatart Rich",
-                    "quantity":1,"price":"2990"
-                },
-                {"name":"Style is War",
-                 "item_id":"notcatart Style",
-                 "quantity":1,
-                 "price":"2990"
-                 }
-            ]
+            "items":items
         }
+
+        print(order_data)
+
+        url = f'https://api-k2.zao-sdt.ru/{api_key}/order'
+
+        response = requests.put(url, json=order_data)
+        if response.status_code == 200:
+            response_json = response.json()
+            print(response_json)
+            if not response_json.get('success'):
+                return Response(response_json, status=500)
+        else:
+            return Response(status=500)
+
+        return Response(response.json(), status=200)
+
         new_order = Order.objects.create(
             order_id=data['order_id'],
             customer=data['fio'],
