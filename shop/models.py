@@ -81,6 +81,8 @@ class Product(models.Model):
     editor_4 = CKEditor5Field('Доствка', blank=True, null=True, config_name='extends')
     editor_5 = CKEditor5Field('Результат', blank=True, null=True, config_name='extends')
 
+    video = models.FileField(upload_to='shop/product/video', blank=True, null=True)
+
 
 
     def __str__(self):

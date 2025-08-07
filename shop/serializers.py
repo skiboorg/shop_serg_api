@@ -45,7 +45,8 @@ class ProductShortSerializer(serializers.ModelSerializer):
             'name',
             'slug',
             'price',
-            'short_description'
+            'short_description',
+            'video'
 
         ]
     def get_image(self,obj):
