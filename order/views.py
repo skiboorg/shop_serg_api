@@ -51,6 +51,7 @@ class OrderView(APIView):
                     "quantity":item.amount,
                     "price":float(item.total_price)
                 })
+            item.delete()
 
         order_data = {
             "order":
