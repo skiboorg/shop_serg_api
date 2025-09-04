@@ -88,8 +88,8 @@ class OrderView(APIView):
         }
 
         print(order_data)
-
-        url = f'https://api-k2.zao-sdt.ru/{api_key}/order?check=1'
+        # ?check = 1
+        url = f'https://api-k2.zao-sdt.ru/{api_key}/order'
 
         response = requests.put(url, json=order_data)
         if response.status_code == 200:
