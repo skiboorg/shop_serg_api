@@ -51,7 +51,7 @@ class OrderView(APIView):
                     "quantity":item.amount,
                     "price":float(item.total_price)
                 })
-            item.delete()
+
 
         order_data = {
             "order":
@@ -89,25 +89,28 @@ class OrderView(APIView):
 
         print(order_data)
 
-        url = f'https://api-k2.zao-sdt.ru/{api_key}/order'
+        url = f'https://api-k2.zao-sdt.ru/{api_key}/order?check=1'
 
         response = requests.put(url, json=order_data)
         if response.status_code == 200:
             response_json = response.json()
             print(response_json)
             if not response_json.get('success'):
-                return Response(response_json, status=500)
-        else:
-            return Response(status=500)
+                result = {'success': False, 'message': response_json}
 
-        return Response(response.json(), status=200)
+        else:
+            result = {'success': False, 'message': 'error'}
+
+
 
         new_order = Order.objects.create(
             order_id=data['order_id'],
-            customer=data['fio'],
-            phone=data['phone'],
+            customer=f"{data['firstname']} {data.get('middlename')} {data['lastname']}",
+            phone=f"+7{data['phone']}",
             email=data['email'],
-            # comment=data['comment'],
+            delivery_address=f"{selected_address['value']} {data['street']} {data['building_1']} {data['building_2']}",
+            selected_delivery = f"{selected_delivery['name']}, стоимость доставки {selected_delivery['cost']} руб, дата {selected_delivery['delivery_date']}",
+            comment=data.get('comment'),
             # payment_type=payment_type,
             # delivery_type_id=delivery_type_id,
             # delivery_address=data['delivery_address']
@@ -123,7 +126,7 @@ class OrderView(APIView):
             item.delete()
 
 
-        result = {'result': True, 'message': f'Заказ {new_order.id} создан'}
+        result = {'success': True, 'message': f'Заказ {new_order.id} создан'}
         return Response(result, status=200)
 
 
