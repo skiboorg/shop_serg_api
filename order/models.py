@@ -47,6 +47,9 @@ class Order(models.Model):
     is_done = models.BooleanField('Обработан', default=False, null=False)
     is_deliveried = models.BooleanField('Доставлен', default=False, null=False)
 
+    sdek_at_door = models.BooleanField('СДЕК до двери', default=False, null=False)
+
+
     @property
     def total_price(self):
         price = 0

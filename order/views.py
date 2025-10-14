@@ -37,69 +37,69 @@ class OrderView(APIView):
     def post(self, request):
         data = request.data
         print(data)
-        selected_address = data['selected_address']
-        selected_delivery = data['selected_delivery']
+        # selected_address = data['selected_address']
+        # selected_delivery = data['selected_delivery']
         cart = get_cart(request)
         api_key = os.getenv("ZAO_SDT_API_KEY")
 
         items = []
 
-        for item in cart.items.all():
-            items.append({
-                    "name":item.product.name,
-                    "item_id":item.product.inner_id,
-                    "quantity":item.amount,
-                    "price":float(item.total_price)
-                })
+        # for item in cart.items.all():
+        #     items.append({
+        #             "name":item.product.name,
+        #             "item_id":item.product.inner_id,
+        #             "quantity":item.amount,
+        #             "price":float(item.total_price)
+        #         })
 
 
-        order_data = {
-            "order":
-                {
-                    "id":data['order_id'],
-                    "delivery_sum":float(selected_delivery['cost']),
-                    "payment_type":2,
-                    "send_date":selected_delivery['delivery_date'],
-                    "comment":data.get('comment'),
-                    "weight":100,
-                    "city_id":selected_address['fias_id'],
-                    "place_id":selected_delivery['place_id'],
-                    "index":selected_address['postal_code'],
-                    "street":data['street'],
-                    "building_1":data['building_1'],
-                    "building_2":data['building_2'],
-                    "room":data['room'],
-                    "options":
-                        {"partial_return":0,
-                         "manual_confirm":False,
-                         "delivery_asap":True
-                         }
-                },
-            "customer":
-                {
-                    "firstname":data['firstname'],
-                    "middlename":data.get('middlename'),
-                    "lastname":data['lastname'],
-                    "phone":f"+7{data['phone']}",
-                    "email":data['email'],
-                    "address":f"{selected_address['value']} {data['street']} {data['building_1']} {data['building_2']}"
-                },
-            "items":items
-        }
+        # order_data = {
+        #     "order":
+        #         {
+        #             "id":data['order_id'],
+        #             "delivery_sum":float(selected_delivery['cost']),
+        #             "payment_type":2,
+        #             "send_date":selected_delivery['delivery_date'],
+        #             "comment":data.get('comment'),
+        #             "weight":100,
+        #             "city_id":selected_address['fias_id'],
+        #             "place_id":selected_delivery['place_id'],
+        #             "index":selected_address['postal_code'],
+        #             "street":data['street'],
+        #             "building_1":data['building_1'],
+        #             "building_2":data['building_2'],
+        #             "room":data['room'],
+        #             "options":
+        #                 {"partial_return":0,
+        #                  "manual_confirm":False,
+        #                  "delivery_asap":True
+        #                  }
+        #         },
+        #     "customer":
+        #         {
+        #             "firstname":data['firstname'],
+        #             "middlename":data.get('middlename'),
+        #             "lastname":data['lastname'],
+        #             "phone":f"+7{data['phone']}",
+        #             "email":data['email'],
+        #             "address":f"{selected_address['value']} {data['street']} {data['building_1']} {data['building_2']}"
+        #         },
+        #     "items":items
+        # }
 
-        print(order_data)
+        # print(order_data)
         # ?check = 1
-        url = f'https://api-k2.zao-sdt.ru/{api_key}/order'
-
-        response = requests.put(url, json=order_data)
-        if response.status_code == 200:
-            response_json = response.json()
-            print(response_json)
-            if not response_json.get('success'):
-                result = {'success': False, 'message': response_json}
-
-        else:
-            result = {'success': False, 'message': 'error'}
+        # url = f'https://api-k2.zao-sdt.ru/{api_key}/order'
+        #
+        # response = requests.put(url, json=order_data)
+        # if response.status_code == 200:
+        #     response_json = response.json()
+        #     print(response_json)
+        #     if not response_json.get('success'):
+        #         result = {'success': False, 'message': response_json}
+        #
+        # else:
+        #     result = {'success': False, 'message': 'error'}
 
 
 
@@ -108,9 +108,10 @@ class OrderView(APIView):
             customer=f"{data['firstname']} {data.get('middlename')} {data['lastname']}",
             phone=f"+7{data['phone']}",
             email=data['email'],
-            delivery_address=f"{selected_address['value']} {data['street']} {data['building_1']} {data['building_2']}",
-            selected_delivery = f"{selected_delivery['name']}, стоимость доставки {selected_delivery['cost']} руб, дата {selected_delivery['delivery_date']}",
+            delivery_address=f"{data['street']} {data['building_1']} {data['building_2']}",
+            selected_delivery = None,
             comment=data.get('comment'),
+            sdek_at_door=data.get('sdek_at_door'),
             # payment_type=payment_type,
             # delivery_type_id=delivery_type_id,
             # delivery_address=data['delivery_address']
