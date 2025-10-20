@@ -105,7 +105,7 @@ class OrderView(APIView):
 
         new_order = Order.objects.create(
             order_id=data['order_id'],
-            customer=f"{data['firstname']} {data.get('middlename','')} {data['lastname']}",
+            customer=f"{data['firstname']} {data['lastname']} {data.get('middlename','')}",
             phone=f"+7{data['phone']}",
             email=data['email'],
             delivery_address=data['delivery_address'],
