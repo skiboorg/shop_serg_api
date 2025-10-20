@@ -105,10 +105,10 @@ class OrderView(APIView):
 
         new_order = Order.objects.create(
             order_id=data['order_id'],
-            customer=f"{data['firstname']} {data.get('middlename')} {data['lastname']}",
+            customer=f"{data['firstname']} {data.get('middlename','')} {data['lastname']}",
             phone=f"+7{data['phone']}",
             email=data['email'],
-            delivery_address=f"{data['street']} {data['building_1']} {data['building_2']}",
+            delivery_address=data['delivery_address'],
             selected_delivery = None,
             comment=data.get('comment'),
             sdek_at_door=data.get('sdek_at_door'),
