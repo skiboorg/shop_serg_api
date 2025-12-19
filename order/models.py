@@ -46,6 +46,7 @@ class Order(models.Model):
     created_at = models.DateTimeField('Создан',auto_now_add=True, null=True)
     is_done = models.BooleanField('Обработан', default=False, null=False)
     is_deliveried = models.BooleanField('Доставлен', default=False, null=False)
+    is_paid = models.BooleanField('Оплачен', default=False, null=False)
 
     sdek_at_door = models.BooleanField('СДЕК до двери', default=False, null=False)
 
